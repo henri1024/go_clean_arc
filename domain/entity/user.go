@@ -5,8 +5,9 @@ import (
 	"regexp"
 	"strings"
 
+	"clean_arc/infrastructure/security"
+
 	"github.com/jinzhu/gorm"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // User is a data structure (Model)
@@ -82,18 +83,14 @@ func (u *User) SaveValid() (map[string]string, bool) {
 }
 
 func (u *User) HashPassword() error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), 7)
+	password, err := security.Hash(u.Password)
 	if err != nil {
 		return err
 	}
-	u.Password = string(hash)
+	u.Password = password
 	return nil
 }
 
 func (u *User) ComparePassword(password string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
-	if err != nil {
-		return false
-	}
-	return true
+	return security.ComparePassword(u.Password, password)
 }
