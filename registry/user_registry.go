@@ -1,7 +1,7 @@
 package registry
 
 import (
-	"clean_arc/interface/controllers"
+	"clean_arc/interface/controller"
 	ip "clean_arc/interface/presenter"
 	ir "clean_arc/interface/repository"
 	"clean_arc/usecase/interactor"
@@ -9,8 +9,8 @@ import (
 	ur "clean_arc/usecase/repository"
 )
 
-func (r *registry) NewUserController() controllers.UserController {
-	return controllers.NewUserController(r.NewUserInteractor())
+func (r *registry) NewUserController() controller.UserController {
+	return controller.NewUserController(r.NewUserInteractor())
 }
 
 func (r *registry) NewUserInteractor() interactor.UserInteractor {

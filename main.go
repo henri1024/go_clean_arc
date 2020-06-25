@@ -19,6 +19,11 @@ func main() {
 	db.LogMode(true)
 	defer db.Close()
 
+	err := datastore.PopulateDB(db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	registry := registry.NewRegistry(db)
 
 	router := router.NewRouter(registry.NewAppController())

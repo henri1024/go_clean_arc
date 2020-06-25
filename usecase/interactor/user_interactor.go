@@ -13,6 +13,7 @@ type userInteractor struct {
 
 type UserInteractor interface {
 	Save(u *entity.User) (*entity.PublicUser, error)
+	GetUserByEmailAndPassword(email, password string) error
 }
 
 func NewUserInteractor(r repository.UserRepository, p presenter.UserPresenter) UserInteractor {
@@ -28,5 +29,9 @@ func (ui *userInteractor) Save(user *entity.User) (*entity.PublicUser, error) {
 		return nil, err
 	}
 
-	return ui.UserPresenter.ResponseSave(user), nil
+	return ui.UserPresenter.ResponseByPublicUserDetail(user), nil
+}
+
+func (ui *userInteractor) GetUserByEmailAndPassword(email, password string) error {
+	return ui.UserRepository.GetUserByEmail(email)
 }

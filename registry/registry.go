@@ -1,7 +1,7 @@
 package registry
 
 import (
-	"clean_arc/interface/controllers"
+	"clean_arc/interface/controller"
 
 	"github.com/jinzhu/gorm"
 )
@@ -11,7 +11,7 @@ type registry struct {
 }
 
 type Registry interface {
-	NewAppController() controllers.AppController
+	NewAppController() controller.AppController
 }
 
 func NewRegistry(db *gorm.DB) Registry {
@@ -20,6 +20,6 @@ func NewRegistry(db *gorm.DB) Registry {
 	}
 }
 
-func (r *registry) NewAppController() controllers.AppController {
+func (r *registry) NewAppController() controller.AppController {
 	return r.NewUserController()
 }

@@ -1,4 +1,4 @@
-package controllers
+package controller
 
 import (
 	"clean_arc/domain/entity"
@@ -15,6 +15,7 @@ type userController struct {
 
 type UserController interface {
 	SaveUser(c *gin.Context)
+	GetUserByEmailAndPassowrd(c *gin.Context)
 }
 
 func NewUserController(ui interactor.UserInteractor) UserController {
@@ -36,7 +37,7 @@ func (uc *userController) SaveUser(c *gin.Context) {
 		return
 	}
 
-	if resp, ok := tempUser.SaveValid(); !ok {
+	if resp, ok := tempUser.ValidSave(); !ok {
 		c.JSON(
 			http.StatusBadRequest,
 			gin.H{
@@ -78,4 +79,39 @@ func (uc *userController) SaveUser(c *gin.Context) {
 		"message": user,
 	})
 	return
+}
+
+func (uc *userController) GetUserByEmailAndPassowrd(c *gin.Context) {
+	tempUser := &entity.User{}
+
+	if err := c.ShouldBindJSON(tempUser); err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"message": "invalid input format",
+			},
+		)
+		return
+	}
+
+	if resp, ok := tempUser.ValidGetByEmailAndPassword(); !ok {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"message": resp,
+			},
+		)
+		return
+	}
+
+	err := uc.userInteractor.GetUserByEmailAndPassword(tempUser.Email, tempUser.Password)
+
+	if err != nil {
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success",
+	})
+
 }

@@ -6,4 +6,5 @@ import (
 
 type UserRepository interface {
 	SaveUser(u *entity.User) (*entity.User, error)
+	GetUserByEmail(email string) error
 }

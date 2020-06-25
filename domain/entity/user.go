@@ -42,7 +42,7 @@ func (u *User) Prepare() {
 	u.Username = strings.ToLower(html.EscapeString(strings.TrimSpace(u.Username)))
 }
 
-func (u *User) SaveValid() (map[string]string, bool) {
+func (u *User) ValidSave() (map[string]string, bool) {
 
 	emailregexp := regexp.MustCompile(emailregexp)
 	usernameregexp := regexp.MustCompile(usernameregexp)
@@ -79,6 +79,35 @@ func (u *User) SaveValid() (map[string]string, bool) {
 		}
 		return nil, true
 	}
+	return msg, false
+}
+
+func (u *User) ValidGetByEmailAndPassword() (map[string]string, bool) {
+
+	emailregexp := regexp.MustCompile(emailregexp)
+
+	msg := make(map[string]string)
+
+	u.Prepare()
+
+	if u.Email == "" {
+		msg["email_required"] = "email is required"
+	} else if !emailregexp.MatchString(u.Email) {
+		msg["invalid_email"] = "invalid email address"
+	}
+
+	if u.Password == "" {
+		msg["password_required"] = "password is required"
+	} else if len(u.Password) < 6 {
+		msg["invalid_password"] = "password must at least 6 character"
+	} else if len(u.Password) > 12 {
+		msg["invalid_password"] = "password must not more than 6 character"
+	}
+
+	if len(msg) == 0 {
+		return nil, true
+	}
+
 	return msg, false
 }
 

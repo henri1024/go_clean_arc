@@ -35,3 +35,34 @@ func generateDBURL() string {
 
 	return fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", host, port, user, name, password)
 }
+
+func PopulateDB(db *gorm.DB) error {
+	users := []entity.User{
+		{
+			Email:    "first@example.com",
+			Password: "password",
+			Username: "username1",
+		},
+		{
+			Email:    "second@example.com",
+			Password: "password",
+			Username: "username2",
+		},
+		{
+			Email:    "third@example.com",
+			Password: "password",
+			Username: "username3",
+		},
+	}
+
+	for _, user := range users {
+		user.HashPassword()
+		err := db.Model(&entity.User{}).Save(&user).Error
+		if err != nil {
+			return err
+		}
+	}
+
+	fmt.Println("Success populate DB")
+	return nil
+}
