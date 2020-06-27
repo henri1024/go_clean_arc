@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 )
 
 type userController struct {
@@ -104,14 +105,38 @@ func (uc *userController) GetUserByEmailAndPassowrd(c *gin.Context) {
 		return
 	}
 
-	err := uc.userInteractor.GetUserByEmailAndPassword(tempUser.Email, tempUser.Password)
+	user, err := uc.userInteractor.GetUserByEmailAndPassword(tempUser.Email, tempUser.Password)
 
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(
+				http.StatusBadRequest,
+				gin.H{
+					"invalid_email": "Email Not registered",
+				},
+			)
+		} else {
+			c.JSON(
+				http.StatusInternalServerError,
+				map[string]string{
+					"internal_server_error": "please contact admin",
+				},
+			)
+		}
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "success",
-	})
+	ok := user.ComparePassword(tempUser.Password)
+	if !ok {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"invalid_password": "invalid password",
+			},
+		)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "success"})
 
 }
