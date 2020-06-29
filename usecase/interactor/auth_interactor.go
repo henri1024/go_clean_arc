@@ -5,24 +5,20 @@ import (
 	"clean_arc/usecase/repository"
 )
 
-type tokenInteractor struct {
-	TokenRepository repository.TokenRepository
+type authInteractor struct {
+	AuthRepository repository.AuthRepository
 }
 
-type TokenInteractor interface {
-	CreateToken(uint) (*authtoken.Token, error)
+type AuthInteractor interface {
+	SaveAuthToken(uint, *authtoken.Token) error
 }
 
-func NewTokenInteractor(r repository.TokenRepository) TokenInteractor {
-	return &tokenInteractor{
-		TokenRepository: r,
+func NewAuthInteractor(r repository.AuthRepository) AuthInteractor {
+	return &authInteractor{
+		AuthRepository: r,
 	}
 }
 
-func (ti *tokenInteractor) CreateToken(userid uint) (*authtoken.Token, error) {
-	token, err := ti.TokenRepository.CreateToken(userid)
-	if err != nil {
-		return nil, err
-	}
-	return token, nil
+func (ai authInteractor) SaveAuthToken(userid uint, token *authtoken.Token) error {
+	return ai.AuthRepository.SaveToken(userid, token)
 }

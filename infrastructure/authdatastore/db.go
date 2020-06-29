@@ -8,7 +8,7 @@ import (
 	"github.com/go-redis/redis"
 )
 
-func NewRedisDB() *redis.Client {
+func NewRedisDB() (*redis.Client, error) {
 	host := os.Getenv("REDIS_HOST")
 	port := os.Getenv("REDIS_PORT")
 	password := os.Getenv("REDIS_PASSWORD")
@@ -22,5 +22,7 @@ func NewRedisDB() *redis.Client {
 		},
 	)
 
-	return redisDB
+	_, err := redisDB.Ping().Result()
+
+	return redisDB, err
 }

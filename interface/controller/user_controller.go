@@ -11,6 +11,8 @@ import (
 )
 
 type userController struct {
+	interactor.TokenInteractor
+	interactor.AuthInteractor
 	userInteractor interactor.UserInteractor
 }
 
@@ -19,9 +21,11 @@ type UserController interface {
 	GetUserByEmailAndPassowrd(c *gin.Context)
 }
 
-func NewUserController(ui interactor.UserInteractor) UserController {
+func NewUserController(ui interactor.UserInteractor, ai interactor.AuthInteractor, ti interactor.TokenInteractor) UserController {
 	return &userController{
-		userInteractor: ui,
+		AuthInteractor:  ai,
+		TokenInteractor: ti,
+		userInteractor:  ui,
 	}
 }
 
@@ -137,6 +141,26 @@ func (uc *userController) GetUserByEmailAndPassowrd(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	token, err := uc.TokenInteractor.CreateToken(user.ID)
+	if err != nil {
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{
+				"Message": err.Error(),
+			},
+		)
+	}
+
+	err = uc.AuthInteractor.SaveAuthToken(user.ID, token)
+	if err != nil {
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{
+				"Message": err.Error(),
+			},
+		)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": token})
 
 }

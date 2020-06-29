@@ -22,8 +22,8 @@ func NewTokenRepository() TokenRepository {
 
 func (tr *tokenRepository) CreateToken(userid uint) (*authtoken.Token, error) {
 
-	secretAccessKey := os.Getenv("SECRET_ACCESS_KEY")
-	secretRefreshKey := os.Getenv("SECRET_REFRESH_KEY")
+	secretAccessKey := []byte(os.Getenv("SECRET_ACCESS_KEY"))
+	secretRefreshKey := []byte(os.Getenv("SECRET_REFRESH_KEY"))
 
 	token := &authtoken.Token{}
 

@@ -5,7 +5,6 @@ import (
 	"clean_arc/infrastructure/datastore"
 	"clean_arc/infrastructure/router"
 	"clean_arc/registry"
-	"fmt"
 	"log"
 
 	"github.com/joho/godotenv"
@@ -26,10 +25,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	redisDB := authdatastore.NewRedisDB()
-	fmt.Println(redisDB)
+	redisDB, err := authdatastore.NewRedisDB()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	registry := registry.NewRegistry(psqlDB)
+	registry := registry.NewRegistry(psqlDB, redisDB)
 
 	router := router.NewRouter(registry.NewAppController())
 
