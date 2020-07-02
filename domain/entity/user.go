@@ -62,13 +62,17 @@ func (u *User) ValidSave() (map[string]string, bool) {
 	} else if len(u.Password) < 6 {
 		msg["invalid_password"] = "password must at least 6 character"
 	} else if len(u.Password) > 12 {
-		msg["invalid_password"] = "password must not more than 6 character"
+		msg["invalid_password"] = "password must not more than 12 character"
 	}
 
 	if u.Username == "" {
 		msg["username_required"] = "username is required"
 	} else if !usernameregexp.MatchString(u.Username) {
 		msg["invalid_username"] = "invalid username format"
+	} else if len(u.Username) < 4 {
+		msg["invalid_username"] = "username must at least 4 character"
+	} else if len(u.Username) > 20 {
+		msg["invalid_username"] = "username must not more than 20 character"
 	}
 
 	if len(msg) == 0 {
@@ -77,7 +81,7 @@ func (u *User) ValidSave() (map[string]string, bool) {
 			msg["invalid_password"] = "cant hash your password, try another"
 			return msg, false
 		}
-		return nil, true
+		return msg, true
 	}
 	return msg, false
 }
@@ -93,7 +97,7 @@ func (u *User) ValidGetByEmailAndPassword() (map[string]string, bool) {
 	if u.Email == "" {
 		msg["email_required"] = "email is required"
 	} else if !emailregexp.MatchString(u.Email) {
-		msg["invalid_email"] = "invalid email address"
+		msg["invalid_email"] = "invalid email format"
 	}
 
 	if u.Password == "" {
@@ -101,11 +105,11 @@ func (u *User) ValidGetByEmailAndPassword() (map[string]string, bool) {
 	} else if len(u.Password) < 6 {
 		msg["invalid_password"] = "password must at least 6 character"
 	} else if len(u.Password) > 12 {
-		msg["invalid_password"] = "password must not more than 6 character"
+		msg["invalid_password"] = "password must not more than 12 character"
 	}
 
 	if len(msg) == 0 {
-		return nil, true
+		return msg, true
 	}
 
 	return msg, false
