@@ -15,3 +15,9 @@ func (m *MockTokenRepository) SaveToken(uid uint, token *domain.Token) error {
 
 	return args.Error(0)
 }
+
+func (m *MockTokenRepository) DeleteTokens(accessDetails *domain.AccessDetails) error {
+	args := m.Called(accessDetails)
+
+	return args.Error(0)
+}

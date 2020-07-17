@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"store/domain"
 	"strings"
@@ -163,6 +164,24 @@ func (uc *UserController) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": token})
+	c.JSON(http.StatusOK, gin.H{"message": token.ToPublic()})
+
+}
+
+func (uc *UserController) LogOut(c *gin.Context) {
+	metadata, err := uc.TokenUsecase.ExtractTokenMetadata(c.Request)
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusUnauthorized, "Unauthorized")
+		return
+	}
+
+	err = uc.TokenUsecase.DeleteTokens(metadata)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, "Successfully logged out")
 
 }

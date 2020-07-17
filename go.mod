@@ -11,5 +11,4 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
-	github.com/DATA-DOG/go-sqlmock v1.4.1
 )

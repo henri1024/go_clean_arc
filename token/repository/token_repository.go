@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"fmt"
 	"store/domain"
 	"strconv"
 	"time"
@@ -34,6 +35,19 @@ func (tr *tokenRepository) SaveToken(uid uint, token *domain.Token) error {
 	}
 	if atCreated == "0" || rtCreated == "0" {
 		return errors.New("no record inserted")
+	}
+	return nil
+}
+
+func (tr *tokenRepository) DeleteTokens(accessDetails *domain.AccessDetails) error {
+
+	atDelete, err := tr.rdb.Del(accessDetails.AccessUuid).Result()
+	if err != nil {
+		return err
+	}
+
+	if atDelete != 1 {
+		return fmt.Errorf("something went wrong %v", atDelete)
 	}
 	return nil
 }
