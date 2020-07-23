@@ -1,4 +1,4 @@
-module store
+module userauth
 
 go 1.14
 

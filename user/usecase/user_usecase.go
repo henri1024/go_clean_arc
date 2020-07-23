@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"errors"
-	"store/domain"
-	"store/infrastructure/security"
+	"userauth/domain"
+	"userauth/infrastructure/security"
 )
 
 type userUsecase struct {

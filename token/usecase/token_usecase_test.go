@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"errors"
-	"store/domain"
-	tokenmock "store/domain/mocks/token"
+	"userauth/domain"
+	tokenmock "userauth/domain/mocks/token"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

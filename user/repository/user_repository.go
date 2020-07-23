@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"store/domain"
+	"userauth/domain"
 
 	"github.com/jinzhu/gorm"
 )

@@ -1,8 +1,8 @@
 package router
 
 import (
-	"store/app/registry"
-	"store/user/controller"
+	"userauth/app/registry"
+	"userauth/user/controller"
 
 	"github.com/gin-gonic/gin"
 )

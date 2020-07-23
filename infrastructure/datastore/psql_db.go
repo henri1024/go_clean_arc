@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"store/domain"
-	"store/infrastructure/security"
+	"userauth/domain"
+	"userauth/infrastructure/security"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"

@@ -3,7 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"store/domain"
+	"userauth/domain"
 	"strconv"
 	"strings"
 

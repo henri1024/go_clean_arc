@@ -1,13 +1,13 @@
 package registry
 
 import (
-	"store/domain"
-	"store/user/controller"
-	userrepo "store/user/repository"
-	userusecase "store/user/usecase"
+	"userauth/domain"
+	"userauth/user/controller"
+	userrepo "userauth/user/repository"
+	userusecase "userauth/user/usecase"
 
-	tokenrepo "store/token/repository"
-	tokenusecase "store/token/usecase"
+	tokenrepo "userauth/token/repository"
+	tokenusecase "userauth/token/usecase"
 )
 
 func (r *registry) NewUserController() controller.UserController {

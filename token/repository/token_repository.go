@@ -3,7 +3,7 @@ package repository
 import (
 	"errors"
 	"fmt"
-	"store/domain"
+	"userauth/domain"
 	"strconv"
 	"time"
 

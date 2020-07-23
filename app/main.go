@@ -2,10 +2,10 @@ package main
 
 import (
 	"log"
-	"store/app/registry"
-	"store/infrastructure/authdatastore"
-	"store/infrastructure/datastore"
-	"store/infrastructure/router"
+	"userauth/app/registry"
+	"userauth/infrastructure/authdatastore"
+	"userauth/infrastructure/datastore"
+	"userauth/infrastructure/router"
 
 	"github.com/joho/godotenv"
 )

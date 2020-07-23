@@ -2,7 +2,7 @@ package router
 
 import (
 	"net/http"
-	"store/domain"
+	"userauth/domain"
 
 	"github.com/gin-gonic/gin"
 )

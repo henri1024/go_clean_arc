@@ -1,7 +1,7 @@
 package controller
 
 import (
-	usermock "store/domain/mocks/user"
+	usermock "userauth/domain/mocks/user"
 	"testing"
 )
 

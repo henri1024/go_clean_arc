@@ -1,8 +1,8 @@
 package mocks
 
 import (
-	"store/domain"
-	"store/infrastructure/security"
+	"userauth/domain"
+	"userauth/infrastructure/security"
 
 	"github.com/stretchr/testify/mock"
 )

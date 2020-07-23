@@ -1,7 +1,7 @@
 package registry
 
 import (
-	"store/user/controller"
+	"userauth/user/controller"
 
 	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
