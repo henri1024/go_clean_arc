@@ -19,7 +19,7 @@ func NewMiddleware(tokenusecase domain.TokenUsecase) *Middleware {
 
 func (m *Middleware) AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		err := m.tokenUsecase.IsValid(c.Request)
+		err := m.tokenUsecase.IsValidRequest(c.Request)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"status": http.StatusUnauthorized,

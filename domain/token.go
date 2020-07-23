@@ -1,6 +1,10 @@
 package domain
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/dgrijalva/jwt-go"
+)
 
 type Token struct {
 	AccessToken    string
@@ -25,13 +29,15 @@ type TokenUsecase interface {
 	CreateToken(uint) (*Token, error)
 	SaveToken(uint, *Token) error
 	ExtractTokenMetadata(*http.Request) (*AccessDetails, error)
-	DeleteTokens(accessDetails *AccessDetails) error
-	IsValid(r *http.Request) error
+	DeleteToken(string) error
+	IsValidRequest(*http.Request) error
+	IsValidToken(*jwt.Token) error
+	VerifyToken(string, string) (*jwt.Token, error)
 }
 
 type TokenRepository interface {
 	SaveToken(uint, *Token) error
-	DeleteTokens(accessDetails *AccessDetails) error
+	DeleteToken(string) error
 }
 
 func (t *Token) ToPublic() *PublicToken {

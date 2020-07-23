@@ -39,9 +39,9 @@ func (tr *tokenRepository) SaveToken(uid uint, token *domain.Token) error {
 	return nil
 }
 
-func (tr *tokenRepository) DeleteTokens(accessDetails *domain.AccessDetails) error {
+func (tr *tokenRepository) DeleteToken(tokenstring string) error {
 
-	atDelete, err := tr.rdb.Del(accessDetails.AccessUuid).Result()
+	atDelete, err := tr.rdb.Del(tokenstring).Result()
 	if err != nil {
 		return err
 	}

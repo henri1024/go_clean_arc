@@ -21,4 +21,5 @@ func UserEndpoint(r *gin.Engine, handler controller.UserController) {
 	r.POST("/api/users/signup", handler.SignUp)
 	r.POST("/api/users/login", handler.Login)
 	r.POST("/api/users/logout", handler.LogOut)
+	r.POST("/api/users/refresh", handler.Refresh)
 }
