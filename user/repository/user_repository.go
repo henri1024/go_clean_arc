@@ -19,11 +19,7 @@ func NewUserRepository(db *gorm.DB) domain.UserRepository {
 func (ur *userRepository) SaveUser(user *domain.User) error {
 	err := ur.db.Model(&domain.User{}).Save(user).Error
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func (ur *userRepository) GetUserByEmail(email string) (*domain.User, error) {
@@ -36,4 +32,11 @@ func (ur *userRepository) GetUserByEmail(email string) (*domain.User, error) {
 	}
 
 	return user, nil
+}
+
+func (ur *userRepository) SavePassword(uid uint, password string) error {
+
+	err := ur.db.Model(&domain.User{}).Where("id = ?", uid).Update("password", password).Error
+
+	return err
 }

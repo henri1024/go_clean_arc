@@ -28,3 +28,11 @@ func (m *MockUserRepository) GetUserByEmail(email string) (*domain.User, error) 
 
 	return res1, res2
 }
+
+func (m *MockUserRepository) SavePassword(uid uint, pass string) error {
+	args := m.Called(uid, pass)
+
+	res := args.Error(1)
+
+	return res
+}

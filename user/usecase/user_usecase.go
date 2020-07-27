@@ -48,3 +48,13 @@ func (uu *userUsecase) GetUserByEmailAndPassword(email, password string) (*domai
 
 	return nil, errors.New("invalid password")
 }
+
+func (uu *userUsecase) ChangePassword(uid uint, password string) error {
+	hashedPass, err := security.Hash(password)
+	if err != nil {
+		return errors.New("failed to hash password")
+	}
+	err = uu.userRepository.SavePassword(uid, hashedPass)
+
+	return nil
+}

@@ -21,11 +21,13 @@ type User struct {
 type UserRepository interface {
 	SaveUser(u *User) error
 	GetUserByEmail(email string) (*User, error)
+	SavePassword(uid uint, password string) error
 }
 
 type UserUsecase interface {
 	SaveUser(u *User) error
 	GetUserByEmailAndPassword(email, password string) (*PublicUser, error)
+	ChangePassword(uid uint, password string) error
 }
 
 const (

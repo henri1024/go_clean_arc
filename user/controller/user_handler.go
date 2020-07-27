@@ -3,9 +3,9 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"userauth/domain"
 	"strconv"
 	"strings"
+	"userauth/domain"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -258,4 +258,38 @@ func (uc *UserController) Refresh(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusUnauthorized, "refresh expired")
+}
+
+func (uc *UserController) ChangePassword(c *gin.Context) {
+	mapToken := map[string]string{}
+
+	if err := c.ShouldBindJSON(&mapToken); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, err.Error())
+		return
+	}
+	newPassword := mapToken["new_password"]
+
+	metadata, err := uc.TokenUsecase.ExtractTokenMetadata(c.Request)
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusUnauthorized, "Unauthorized")
+		return
+	}
+	uid := uint(metadata.UserId)
+
+	err = uc.UserUsecase.ChangePassword(uid, newPassword)
+	if err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			map[string]string{
+				"something went wrong": err.Error(),
+			},
+		)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "password updated",
+	})
+	return
+
 }

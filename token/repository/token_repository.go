@@ -3,9 +3,9 @@ package repository
 import (
 	"errors"
 	"fmt"
-	"userauth/domain"
 	"strconv"
 	"time"
+	"userauth/domain"
 
 	"github.com/go-redis/redis"
 )
@@ -27,10 +27,12 @@ func (tr *tokenRepository) SaveToken(uid uint, token *domain.Token) error {
 
 	atCreated, err := tr.rdb.Set(token.TokenUuid, strconv.Itoa(int(uid)), at.Sub(now)).Result()
 	if err != nil {
+		fmt.Println("1", err)
 		return err
 	}
 	rtCreated, err := tr.rdb.Set(token.RefreshUuid, strconv.Itoa(int(uid)), rt.Sub(now)).Result()
 	if err != nil {
+		fmt.Println("2", err)
 		return err
 	}
 	if atCreated == "0" || rtCreated == "0" {
@@ -40,7 +42,6 @@ func (tr *tokenRepository) SaveToken(uid uint, token *domain.Token) error {
 }
 
 func (tr *tokenRepository) DeleteToken(tokenstring string) error {
-
 	atDelete, err := tr.rdb.Del(tokenstring).Result()
 	if err != nil {
 		return err

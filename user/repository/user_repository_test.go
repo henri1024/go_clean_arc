@@ -1,5 +1,1 @@
 package repository
-
-func TestSaveUser() {
-
-}
