@@ -21,6 +21,12 @@ type authUsecase struct {
 	jwt             *jwtAuth.JwtWidget
 }
 
+type tokenString struct {
+	token string
+	err   error
+	mode  string
+}
+
 func NewAuthUsecase(tokenRepository domain.AuthRepository, idGen *uuid.UuidGenerator, jwtauth *jwtAuth.JwtWidget) domain.AuthUsecase {
 	return &authUsecase{
 		tokenRepository: tokenRepository,
@@ -43,22 +49,54 @@ func (au *authUsecase) CreateToken(uid uint) (*domain.Token, error) {
 		RefreshUuid:    au.idGen.NewId(),
 	}
 
-	var (
-		accessToken  string
-		refreshToken string
-		err          error
-	)
+	ch := make(chan *tokenString)
+	defer close(ch)
 
-	if accessToken, err = au.jwt.CreateToken("ACCESS", token.TokenUuid, uid, token.AccessExpired); err != nil {
-		return nil, err
+	go func() {
+		tkn, err := au.jwt.CreateToken("ACCESS", token.TokenUuid, uid, token.AccessExpired)
+		ch <- &tokenString{
+			token: tkn,
+			err:   err,
+			mode:  "ACCESS",
+		}
+	}()
+
+	go func() {
+		tkn, err := au.jwt.CreateToken("REFRESH", token.RefreshUuid, uid, token.RefreshExpired)
+		ch <- &tokenString{
+			token: tkn,
+			err:   err,
+			mode:  "REFRESH",
+		}
+	}()
+
+	for i := 0; i < 2; i++ {
+		temp := <-ch
+		if temp.err != nil {
+			return nil, temp.err
+		} else if temp.mode == "ACCESS" {
+			token.AccessToken = temp.token
+		} else if temp.mode == "REFRESH" {
+			token.RefreshToken = temp.token
+		}
 	}
 
-	if refreshToken, err = au.jwt.CreateToken("REFRESH", token.RefreshUuid, uid, token.RefreshExpired); err != nil {
-		return nil, err
-	}
+	// var (
+	// 	accessToken  string
+	// 	refreshToken string
+	// 	err          error
+	// )
 
-	token.AccessToken = accessToken
-	token.RefreshToken = refreshToken
+	// if accessToken, err = au.jwt.CreateToken("ACCESS", token.TokenUuid, uid, token.AccessExpired); err != nil {
+	// 	return nil, err
+	// }
+
+	// if refreshToken, err = au.jwt.CreateToken("REFRESH", token.RefreshUuid, uid, token.RefreshExpired); err != nil {
+	// 	return nil, err
+	// }
+
+	// token.AccessToken = accessToken
+	// token.RefreshToken = refreshToken
 
 	return token, nil
 }
